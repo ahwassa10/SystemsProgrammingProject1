@@ -1,0 +1,16 @@
+Specifications for strbld.c and strbld.h
+
+int sb_init(strbld_t*)
+# Initializes a strbld_t struct. The size of the struct is initially set to 10 since most words are less than 9 characters (plus the null terminator).
+# Automatically null terminates the string, so the first character is set to '\0'
+# Return
+        $ Returns 0 if the function was able to initialize the struct correctly
+        $ Returns 1 if the function couldn't allocate the memory with malloc.
+
+void sb_free(strbld_t*)
+# Frees the data field in the strbld_t struct.
+# Does not return anything.
+
+int sb_append(strbld_t*, char) 
+# Appends a character to the end of the buffer.
+# If the used field equals the length field, the size of the buffer is doubled (like in the homework 2). Otherwise, the character is written in the spot of the original null terminator, and the null terminator is written in the spot after the char.
