@@ -23,7 +23,10 @@ int sb_append(strbld_t* buf, char item) {
                 size_t newSize = buf->size * 2;
                 char* temp = realloc(buf->data, newSize);
                 
-                if (!temp) return 1;
+                if (!temp) {
+                        free(buf->data);
+                        return 1;
+                }
                 
                 buf->data = temp;
                 buf->size = newSize;

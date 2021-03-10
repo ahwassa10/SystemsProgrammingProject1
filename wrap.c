@@ -28,6 +28,9 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
         char spaceBuf[1] = {' '};
         
         while (bytesRead = read(inputStream, buffer, INTERNAL_BUFSIZE)) {
+                if (bytesRead != INTERNAL_BUFSIZE) {
+                        buffer[bytesRead] = '\n';
+                }
                 for (int i = 0; i < bytesRead; i++) {
                         char temp = buffer[i];
                         if (!isspace(temp)) {
@@ -51,14 +54,16 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                                 
                         } else if (word.used != 1) {
                                 size_t wordLength;
+                                size_t realLength;
                                 wordLength = (startOfLine) ? (word.used - 1) : (word.used);
+                                realLength = word.used - 1;
                                 size_t spaceRemaining = lineWidth - charsWritten;
                                 
                                 if (wordLength <= spaceRemaining) {
                                         if (!startOfLine) {
                                                 write(outputStream, spaceBuf, 1);
                                         }
-                                        write(outputStream, word.data, wordLength);
+                                        write(outputStream, word.data, realLength);
                                         startOfLine = false;
                                         charsWritten += wordLength;
                                         
@@ -71,7 +76,7 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                                         if (!startOfLine) {
                                                 write(outputStream, newlineBuf, 1);
                                         }
-                                        write(outputStream, word.data, wordLength);
+                                        write(outputStream, word.data, realLength);
                                         write(outputStream, newlineBuf, 1);
                                         startOfLine = true;
                                         charsWritten = 0;
@@ -86,7 +91,7 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                                         
                                         wordLength = word.used - 1;
                                         
-                                        write(outputStream, word.data, wordLength);
+                                        write(outputStream, word.data, realLength);
                                         startOfLine = false;
                                         charsWritten += wordLength;
                                         
@@ -102,6 +107,8 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                 }
         }
         
+        sb_free(&word);
+        
         if (!startOfLine) {
                 write(outputStream, newlineBuf, 1);
         }
@@ -115,5 +122,6 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
 
 int main (int argc, char** argv) {
         int fd = open(argv[1], O_RDONLY);
-        wrap(atoi(argv[2]), fd, 1);
+        size_t lineWidth = atio(argv[2]);
+        wrap(lineWidth, fd, 1);
 }
