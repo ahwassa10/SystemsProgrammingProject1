@@ -33,8 +33,10 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                         if (!isspace(temp)) {
                                 ret = sb_append(&word, temp);
                                 if (ret) return 1;
+                                
                                 newlineRead = false;
                                 canParagraph = true;
+                                
                         } else if (word.used != 1) {
                                 size_t wordLength;
                                 wordLength = (startOfLine) ? (word.used - 1) : (word.used);
@@ -62,10 +64,11 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                                         sb_free(&word);
                                         ret = sb_init(&word);
                                         if (ret) return 1;
+                                        charsWritten = 0;
                                         
+                                        canParagraph = false;
                                         oversizedLine = true;
                                         startOfLine = true;
-                                        charsWritten = 0;
                                         
                                 } else {
                                         write(outputStream, newlineBuf, 1);
@@ -84,8 +87,15 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                         }
                                 
                         if (temp == '\n' && newlineRead && canParagraph) {
+                                if (!startOfLine) {
+                                        write(outputStream, newlineBuf, 1);
+                                }
                                 write(outputStream, newlineBuf, 1);
-                                write(outputStream, newlineBuf, 1);
+                                
+                                sb_free(&word);
+                                ret = sb_init(&word);
+                                if (ret) return 1;
+                                        
                                 newlineRead = false;
                                 canParagraph = false;
                                 startOfLine = true;
