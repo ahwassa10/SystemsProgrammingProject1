@@ -53,7 +53,16 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                                         startOfLine = false;
                                         
                                 } else if (wordLength > lineWidth) {
+                                        if (!startOfLine) {
+                                                write(outputStream, newlineBuf, 1);
+                                        }
                                         write(outputStream, word.data, wordLength);
+                                        write(outputStream, newlineBuf, 1);
+                                        
+                                        sb_free(&word);
+                                        ret = sb_init(&word);
+                                        if (ret) return 1;
+                                        
                                         oversizedLine = true;
                                         startOfLine = true;
                                         charsWritten = 0;
@@ -88,7 +97,9 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
                 }
         }
         
-        write(outputStream, newlineBuf, 1);
+        if (!startOfLine) {
+                write(outputStream, newlineBuf, 1);
+        }
         
         if (oversizedLine) {
                 return 1;
