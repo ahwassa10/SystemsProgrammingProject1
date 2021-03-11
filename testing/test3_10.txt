@@ -1,28 +1,17 @@
-
-	
-  
-
-
-This 
-is
-a 
+This is a
 sentence
 
-and
-this
-is a 
+and this
+is a
 paragraph
 
 para
-	
+
 paragraphs
 paragraphing
 a paragrap
 para
 
-   
-
-of 
-
+of
 
 graph
