@@ -27,7 +27,7 @@ int wrap(size_t lineWidth, int inputStream, int outputStream) {
         char newlineBuf[1] = {'\n'};
         char spaceBuf[1] = {' '};
         
-        while (bytesRead = read(inputStream, buffer, INTERNAL_BUFSIZE)) {
+        while ((bytesRead = read(inputStream, buffer, INTERNAL_BUFSIZE))) {
                 if (bytesRead != INTERNAL_BUFSIZE) {
                         buffer[bytesRead] = '\n';
                 }
