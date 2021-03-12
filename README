@@ -1,0 +1,20 @@
+Paul Kotys pjk151
+Steven French saf243
+Systems Programming CS214 with Professor Menendez
+
+To test the correctness of the program, we created a bash script that ran
+multiple test cases.
+
+Each test case involved an input file, a lineWidth, and a hand made output file
+that the bash script would test against using dif. For many test cases, we used
+the same input file and only changed the lineWidth. This ensured that the
+program works on small lineWidths such as 1 or 5 and larger lineWidths like 20,
+30, 40, etc.
+
+Since dif checks the bytes of the file, we were able to ensure that the wrapping
+algorithm did not add any unnecessary whitespace and that the algorithm worked
+according to specifications.
+
+The bash script also ran valgrind on each test case and reported back any memory
+leaks and other program problems. All problems were fixed until no valgrind
+errors were reported.
