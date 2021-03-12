@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
 	}
 	size_t lineWidth = atoi(argv[1]);
 	if(lineWidth < 1) {
+		write(2, "Invalid arguments\n", 18);
 		exit(EXIT_FAILURE);
 	}
 	if(argc == 2) { // ww lineWidth
