@@ -8,6 +8,8 @@ lineWidths=(1 10 15 20 20 30 1 10 20 1 5 10 1 5 11)
 
 outputFiles=("test1_1.txt" "test1_10.txt" "test1_15.txt" "test1_20.txt" "test2_20.txt" "test2_30.txt" "test3_1.txt" "test3_10.txt" "test3_20.txt" "test4_1.txt" "test4_5.txt" "test4_10.txt" "test5_1.txt" "test5_5.txt" "test5_11.txt")
 
+wrapFiles=("wrap.test1_1.txt" "wrap.test1_10.txt" "wrap.test1_15.txt" "wrap.test1_20.txt" "wrap.text2_20.txt" "wrap.test2_30.txt" "wrap.test3_1.txt" "wrap.test3_10.txt" "wrap.test3_20.txt" "wrap.test4_1.txt" "wrap.test4_5.txt" "wrap.test4_10.txt" "wrap.test5_1.txt" "wrap.test5_5.txt" "wrap.test5_11.txt")
+
 for i in {0..14}
 do
         echo testing ${inputFiles[i]} against ${outputFiles[i]}
@@ -15,6 +17,10 @@ do
         echo testing reflexive property
         ./ww ${lineWidths[i]} ${inputFiles[i]} > temp
         ./ww ${lineWidths[i]} temp | cmp ${outputFiles[i]}
+
+        echo testing wrap. functionality
+        ./ww ${lineWidths[i]} ${wrapFile[i]} | cmp ${outputFiles[i]}
+
         valgrind --leak-check=yes --error-exitcode=4 --log-file=temp ./ww ${lineWidths[i]} ${inputFiles[i]} > temp
         ret=$?
         if [ $ret -eq 4 ]
