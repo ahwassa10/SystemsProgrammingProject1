@@ -87,20 +87,16 @@ int main(int argc, char **argv) {
 				exit(EXIT_FAILURE);
 			}
 			struct dirent *dp;
+			if(chdir(argv[2]) == -1) {
+				perror(argv[2]);
+				exit(EXIT_FAILURE);
+			}
 			while((dp = readdir(dir)) != NULL) {
-				char filename[250];
-				strcpy(filename, dp->d_name);
-				char filepath[500];
-				strcpy(filepath, argv[2]);
-				if(filepath[strlen(filepath) - 1] != '/' && filepath[strlen(filepath) - 1] != '\\' && dp->d_name[0] != '/' && dp->d_name[0] != '\\') { // unsure of whether argv[2] will always end in a / or \ or if d_name always starts with a / or \; adding a / between the path and individual file's name if this happens
-					strcat(filepath, "/");
-				}
-				strcat(filepath, filename);
-				if(isdir(filepath) == -1) {
-					perror(filepath);
+				if(isdir(dp->d_name) == -1) {
+					perror(dp->d_name);
 					exit(EXIT_FAILURE);
 				}
-				else if(isdir(filepath) == 1) { // skip subdirectories
+				else if(isdir(dp->d_name) == 1) { // skip subdirectories
 					continue;
 				}
 				if(strncmp(dp->d_name, ".", 1) == 0 || strncmp(dp->d_name, "wrap.", 5) == 0) { // skip if file name starts with "." or "wrap."
@@ -108,9 +104,9 @@ int main(int argc, char **argv) {
 				}
 				else {
 					char newfilename[255] = "wrap.";
-					strcat(newfilename, filename);
-					int fd = openat(dirfd(dir), dp->d_name, O_RDONLY);
-					int newfd = openat(dirfd(dir), newfilename, O_WRONLY|O_TRUNC|O_CREAT, 0666);
+					strcat(newfilename, dp->d_name);
+					int fd = open(dp->d_name, O_RDONLY);
+					int newfd = open(newfilename, O_WRONLY|O_TRUNC|O_CREAT, 0666);
 					if(wrap(lineWidth, fd, newfd) != 0) {
 						exit(EXIT_FAILURE);
 					}
