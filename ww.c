@@ -46,6 +46,7 @@ bool isNumber(char *string) {
 }
 
 int main(int argc, char **argv) {
+	int sumWrapErrors = 0;
 	if(argc < 2 || argc > 3) {
 		write(2, "Invalid arguments\n", 18);
 		exit(EXIT_FAILURE);
@@ -107,9 +108,7 @@ int main(int argc, char **argv) {
 					strcat(newfilename, dp->d_name);
 					int fd = open(dp->d_name, O_RDONLY);
 					int newfd = open(newfilename, O_WRONLY|O_TRUNC|O_CREAT, 0666);
-					if(wrap(lineWidth, fd, newfd) != 0) {
-						exit(EXIT_FAILURE);
-					}
+					sumWrapErrors += wrap(lineWidth, fd, newfd);
 					close(fd);
 					close(newfd);
 				}
@@ -120,6 +119,6 @@ int main(int argc, char **argv) {
 			write(2, "Invalid arguments\n", 18);
 			exit(EXIT_FAILURE);
 		}
-		return(0);
 	}
+	return(sumWrapErrors);
 }
