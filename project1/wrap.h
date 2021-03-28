@@ -1,0 +1,1 @@
+int wrap(size_t, int, int);
